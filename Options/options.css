@@ -1,17 +1,19 @@
 body {
   font-family: 'Comic Sans MS', cursive, sans-serif;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  height: 100vh;
+  min-height: 100vh;
   margin: 0;
   background-color: #ffffff;
   color: #000000;
-  padding: 30px;
+  overflow-y: auto;
 }
 
+
 .container {
-  margin-top: 500px;
+  margin-top: 20px;
+  margin-bottom:  20px;
   width: 600px;
   padding: 20px;
   border-radius: 10px;
