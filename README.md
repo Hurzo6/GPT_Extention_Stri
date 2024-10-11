@@ -12,7 +12,9 @@ Cette extension a été initialement créée par des étudiants dans le but de f
 - **Utilisation de Clé API** : Intégration facile avec des clés API OpenAI pour accéder à des fonctionnalités avancées.
 - **Notifications Personnalisables** : Option pour activer ou désactiver les notifications de réponse.
 - **Mode STRI** : Automatisation de la sélection des réponses pour les quiz sur `stri.net`, en cochant automatiquement la réponse correspondant à la première lettre fournie par l'IA (`Ex: C.`).
-- **Raccourci Clavier** : Lancer la requête vers ChatGPT avec le raccourci `Command+I` (macOS) ou `Ctrl+Shift+I` (Windows/Linux), sans passer par le menu contextuel.
+- **Raccourci Clavier pour l'envoi** : Lancer la requête vers ChatGPT avec le raccourci `⌘Cmd + ⇧Maj + &` (macOS) ou `Ctrl+Shift+I` (Windows/Linux), sans passer par le menu contextuel.
+- **Raccourci Clavier pour les Notifications** : Activer ou désactiver les notifications de l'extension avec le raccourci `⌘Cmd + ⇧Maj + N` (macOS) ou `Ctrl+Shift+N` (Windows/Linux).
+
 ---
 
 ## Comment ça marche :
@@ -29,13 +31,15 @@ Cette extension a été initialement créée par des étudiants dans le but de f
 
 4. **Mode STRI** :
    - Si activé, le mode STRI coche automatiquement la réponse suggérée par l'IA sur les quiz de la plateforme `stri.net`, uniquement pour les réponses de type choix unique (`Ex: C.`).
+   - **Détection automatique des questions** : Si aucun texte n'est sélectionné et que le mode STRI est activé, l'extension détecte automatiquement le contenu des questions sur les pages de quiz STRI et l'envoie à l'assistant.
+
 ---
 
 ## Paramètres Personnalisables :
 
 - **Modèle d'IA** : Sélectionnez parmi plusieurs modèles (GPT-4o, GPT-4, GPT-4 Turbo).
 - **Thème Visuel** : Passez du mode clair au mode sombre pour une expérience utilisateur optimale.
-- **Mode Notifications** : Activez ou désactivez les notifications de l'extension.
+- **Mode Notifications** : Activez ou désactivez les notifications de l'extension avec le raccourci `⌘Cmd + ⇧Maj + N` (macOS) ou `Ctrl+Shift+N` (Windows/Linux).
 - **Mode STRI** : Activez ou désactivez la sélection automatique des réponses dans les quiz STRI.
 
 ---
@@ -46,4 +50,4 @@ Cette extension a été initialement créée par des étudiants dans le but de f
 
 ## Tarifs :
 
-Voir : https://openai.com/api/pricing/
+Voir : [OpenAI Tarifs](https://openai.com/api/pricing/).

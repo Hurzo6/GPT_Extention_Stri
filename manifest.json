@@ -1,9 +1,8 @@
 {
   "manifest_version": 3,
   "name": "GPT Notification/Quiz - STRI",
-  "version": "1.02",
-  "options_page": "Options/options.html",
-  "description": "Envoyez du texte sélectionné à ChatGPT et recevez une réponse dans une notification.",
+  "version": "1.03",
+  "description": "Extension permettant de gérer les interactions avec ChatGPT sur des pages web.",
   "permissions": [
     "contextMenus",
     "storage",
@@ -13,11 +12,12 @@
     "scripting",
     "commands"
   ],
-  "icons": {
-    "128": "icon.png"
-  },
+  "options_page": "Options/options.html",
   "background": {
     "service_worker": "background.js"
+  },
+  "icons": {
+    "128": "icon.png"
   },
   "commands": {
     "send_to_chatgpt": {
@@ -26,6 +26,13 @@
         "default": "Ctrl+I"
       },
       "description": "Envoyer la sélection à ChatGPT"
+    },
+    "toggle_notifications": {
+      "suggested_key": {
+        "mac": "Command+Shift+N",
+        "default": "Ctrl+Shift+N"
+      },
+      "description": "Activer/Désactiver les notifications"
     }
   }
 }

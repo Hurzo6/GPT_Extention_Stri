@@ -3,7 +3,7 @@ function copyTextToClipboard(tabId, text) {
     target: { tabId: tabId },
     func: (text) => {
       navigator.clipboard.writeText(text).then(() => {
-        console.log('Texte copié avec succès dans le presse-papier');
+        // console.log('Texte copié avec succès dans le presse-papier');
       }).catch(error => {
         console.error('Erreur lors de la copie dans le presse-papier:', error);
         alert('Erreur lors de la copie dans le presse-papier.');
@@ -31,14 +31,31 @@ chrome.commands.onCommand.addListener((command, tab) => {
     }, (selection) => {
       const selectedText = selection[0].result.trim();
       if (selectedText) {
-        // Effectue la même action que le menu contextuel
         handleSelectedText(selectedText, tab);
       } else {
-        alert("Veuillez sélectionner un texte avant d'utiliser le raccourci.");
+        detectStriQuiz(tab);  // Détecter automatiquement le quiz sur STRI si rien n'est sélectionné
       }
     });
+  } else if (command === "toggle_notifications") {
+    toggleNotifications();
   }
 });
+
+// Activer/désactiver les notifications
+function toggleNotifications() {
+  chrome.storage.local.get(['notifications'], function (items) {
+    const currentState = items.notifications || false;
+    chrome.storage.local.set({ notifications: !currentState }, function () {
+      console.log('Notifications ' + (!currentState ? 'activées' : 'désactivées') + '.');
+      chrome.notifications.create({
+        type: 'basic',
+        iconUrl: 'icon.png',
+        title: 'Notifications',
+        message: 'Notifications ' + (!currentState ? 'activées' : 'désactivées') + '.'
+      });
+    });
+  });
+}
 
 // Écouteur pour le menu contextuel
 chrome.contextMenus.onClicked.addListener(function (info, tab) {
@@ -47,7 +64,7 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
 
 // Fonction pour traiter le texte sélectionné (exécutée par le menu ou le raccourci)
 function handleSelectedText(selectedText, tab) {
-  chrome.storage.sync.get(['model', 'prefix', 'apiKey', 'notifications', 'modeStri'], function (items) {
+  chrome.storage.local.get(['model', 'prefix', 'apiKey', 'notifications', 'modeStri'], function (items) {
     const model = items.model || 'gpt-4-turbo';
     const prefix = items.prefix || 'Votre préfixe par défaut';
     const apiKey = items.apiKey || '';
@@ -68,6 +85,7 @@ function handleSelectedText(selectedText, tab) {
     }
 
     const modifiedSelectedText = prefix + " " + selectedText;
+    // console.log(`Texte envoyé à l'API OpenAI : "${modifiedSelectedText}"`);
 
     fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -80,10 +98,16 @@ function handleSelectedText(selectedText, tab) {
         messages: [{ role: "user", content: modifiedSelectedText }]
       })
     })
-    .then(response => response.json())
+    .then(response => {
+      if (response.status !== 200) {
+        throw new Error('Clé API invalide ou requête non autorisée.');
+      }
+      return response.json();
+    })
     .then(data => {
       if (data && data.choices && data.choices[0] && data.choices[0].message) {
         const assistantMessage = data.choices[0].message.content;
+        // console.log(`Réponse de l'assistant : "${assistantMessage}"`);
 
         if (notificationsEnabled) {
           chrome.notifications.create({
@@ -109,7 +133,6 @@ function handleSelectedText(selectedText, tab) {
                   const label = document.getElementById(option.getAttribute('aria-labelledby'));
                   if (label && label.innerText.trim().startsWith(letter)) {
                     option.checked = true;
-                    console.log("Option cochée automatiquement:", label.innerText);
                   }
                 });
               },
@@ -120,6 +143,7 @@ function handleSelectedText(selectedText, tab) {
       }
     })
     .catch(error => {
+      console.error('Erreur lors de l\'appel à l\'API:', error.message);
       if (notificationsEnabled) {
         chrome.notifications.create({
           type: 'basic',
@@ -129,5 +153,37 @@ function handleSelectedText(selectedText, tab) {
         });
       }
     });
+  });
+}
+
+// Détecte automatiquement les quiz sur STRI si rien n'est sélectionné
+function detectStriQuiz(tab) {
+  chrome.scripting.executeScript({
+    target: { tabId: tab.id },
+    func: () => {
+      const questionContent = document.querySelector('.que .qtext');
+      const answerContent = document.querySelectorAll('.que .answer .d-flex');
+
+      if (questionContent && answerContent.length > 0) {
+        let fullText = "Question : " + questionContent.innerText.trim() + "\n\nVeuillez choisir une réponse.\n\n";
+        answerContent.forEach(answer => {
+          const answerText = answer.innerText.trim().replace(/\n/g, '').replace(/\s+/g, ' ');
+          fullText += answerText + "\n";
+        });
+        return fullText;
+      }
+      return null;
+    }
+  }, (results) => {
+    if (results && results[0].result) {
+      handleSelectedText(results[0].result, tab);
+    } else {
+      chrome.notifications.create({
+        type: 'basic',
+        iconUrl: 'icon.png',
+        title: 'STRI Quiz',
+        message: 'Aucun quiz STRI détecté sur cette page.'
+      });
+    }
   });
 }
