@@ -127,7 +127,7 @@ Activez ou désactivez les notifications de l'extension avec le raccourci ⌘Cmd
 
 **Enzo Hurtado**
 
-Ce projet a été créé par Enzo Hurtado. Connectez-vous avec moi sur [GitHub](https://github.com/Hurzo6) ou [Linkedin](https://www.linkedin.com/in/enzo-hurtado/)pour en savoir plus sur mes projets et mon parcours professionnel.
+Ce projet a été créé par Enzo Hurtado. Connectez-vous avec moi sur [GitHub](https://github.com/Hurzo6) ou [Linkedin](https://www.linkedin.com/in/enzo-hurtado/) pour en savoir plus sur mes projets et mon parcours professionnel.
 
 ## 📖 Licence
 
